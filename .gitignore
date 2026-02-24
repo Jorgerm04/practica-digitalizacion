@@ -1,0 +1,9 @@
+# Dependencias
+node_modules/
+
+# Archivos de construcción (generados por Vite)
+dist/
+
+# Logs y archivos temporales
+npm-debug.log*
+.DS_Store
