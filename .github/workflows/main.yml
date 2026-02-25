@@ -1,0 +1,40 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - 
+        uses: actions/checkout@v4
+    - 
+        name: Ejecutar tests
+        run: docker build --target test .
+    - 
+        name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+    - 
+        name: Poner maquina virtual
+        uses: docker/setup-qemu-action@v3
+    - 
+        name: Configurar buildx
+        uses: docker/setup-buildx-action@v3
+    - 
+        name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          target: production
+          platforms: linux/amd64, linux/arm64
+          tags: ${{ secrets.DOCKER_HUB_USER }}/taskapp:latest
